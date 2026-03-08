@@ -1,0 +1,6 @@
+node_modules
+.parcel-cache
+*.log
+dist
+*.mdb
+.env

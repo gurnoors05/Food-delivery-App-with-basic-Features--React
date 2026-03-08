@@ -4,3 +4,4 @@ node_modules
 dist
 *.mdb
 food-delivery-backend/.env
+.env.local

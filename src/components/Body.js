@@ -28,7 +28,7 @@ const Body = () => {
 
 
         try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}api/restaurants`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/restaurants`);
         const dbData = await response.json();
 
         // Check if dbData is actually an array before mapping

@@ -25,7 +25,7 @@ const Header = () => {
 
         try {
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}api/cart`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cart`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

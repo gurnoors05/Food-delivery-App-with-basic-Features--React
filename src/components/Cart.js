@@ -41,7 +41,7 @@ if (!token) {
 
         try {
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}api/cart`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cart`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -81,7 +81,7 @@ if (!token) {
 
             try {
 
-                const response = await fetch(`${import.meta.env.VITE_API_URL}api/cart/clear`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cart/clear`, {
                     method: "DELETE",
                     headers: { Authorization: `Bearer ${token}` }
                 });

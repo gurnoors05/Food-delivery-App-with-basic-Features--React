@@ -15,7 +15,7 @@ const ItemList = ({ itemCards }) => {
 
     try {
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/cart`, {
+      const res = await fetch(`${process.env.API_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -65,7 +65,7 @@ const ItemList = ({ itemCards }) => {
 
     const itemId = info?.id || info?.menu_item_id;
 
-    await fetch(`${import.meta.env.VITE_API_URL}/api/cart/add`, {
+    await fetch(`${process.env.API_URL}/api/cart/add`, {
 
       method: "POST",
 
@@ -91,7 +91,7 @@ const ItemList = ({ itemCards }) => {
 
   const increaseItem = async (itemId) => {
 
-    await fetch(`${import.meta.env.VITE_API_URL}/api/cart/increase/${itemId}`, {
+    await fetch(`${process.env.API_URL}/api/cart/increase/${itemId}`, {
 
       method: "PUT",
 
@@ -107,7 +107,7 @@ const ItemList = ({ itemCards }) => {
 
   const decreaseItem = async (itemId) => {
 
-    await fetch(`${import.meta.env.VITE_API_URL}/api/cart/decrease/${itemId}`, {
+    await fetch(`${process.env.API_URL}/api/cart/decrease/${itemId}`, {
 
       method: "PUT",
 

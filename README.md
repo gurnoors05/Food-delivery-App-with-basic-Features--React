@@ -66,6 +66,7 @@ This project demonstrates **full-stack development using React, Node.js, Express
 
 ```bash
 git clone https://github.com/your-username/food-delivery-app.git
+
 ## 2️⃣ Backend Setup
 cd backend
 npm install
@@ -79,6 +80,7 @@ JWT_SECRET=your_secret_key
 Start the backend server:
 
 node server.js
+
 ## 3️⃣ Frontend Setup
 cd frontend
 npm install

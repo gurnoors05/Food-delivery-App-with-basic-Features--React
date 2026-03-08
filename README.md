@@ -58,41 +58,7 @@ This project demonstrates **full-stack development using React, Node.js, Express
 - JSON Web Tokens (JWT)
 
 ---
-# 📂 Project Structure
 
-
-food-delivery-app
-│
-├── frontend
-│ ├── components
-│ │ ├── Header.js
-│ │ ├── ItemList.js
-│ │ ├── Cart.js
-│ │ ├── LoginForm.js
-│ │ └── RestaurantMenu.js
-│ │
-│ ├── App.js
-│ └── index.js
-│
-├── backend
-│ ├── controllers
-│ │ └── cartController.js
-│ │
-│ ├── models
-│ │ └── Cart.js
-│ │
-│ ├── routes
-│ │ └── cartRoutes.js
-│ │
-│ ├── middleware
-│ │ └── authMiddleware.js
-│ │
-│ └── server.js
-│
-└── README.md
-
-
----
 
 # ⚙️ Installation & Setup
 
@@ -100,7 +66,7 @@ food-delivery-app
 
 ```bash
 git clone https://github.com/your-username/food-delivery-app.git
-2️⃣ Backend Setup
+## 2️⃣ Backend Setup
 cd backend
 npm install
 
@@ -113,7 +79,7 @@ JWT_SECRET=your_secret_key
 Start the backend server:
 
 node server.js
-3️⃣ Frontend Setup
+## 3️⃣ Frontend Setup
 cd frontend
 npm install
 npm start

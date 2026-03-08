@@ -23,9 +23,42 @@ const Body = () => {
         // const response = await data.json();
         // setListOfRestaurants(response?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
         // setfilteredRes(response?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+        // setListOfRestaurants(MOCK_RESTAURANT_DATA);
+        // setfilteredRes(MOCK_RESTAURANT_DATA);
+
+
+        try {
+        const response = await fetch("http://localhost:5000/api/restaurants");
+        const dbData = await response.json();
+
+        // Check if dbData is actually an array before mapping
+        if (Array.isArray(dbData)) {
+            const formattedData = dbData.map((restaurant) => ({
+                info: {
+                    id: restaurant.id,
+                    name: restaurant.name,
+                    cloudinaryImageId: restaurant.cloudinaryImageId,
+                    cuisines: restaurant.cuisines, // keep as array
+                    avgRating: restaurant.avgRating,
+                    costForTwo: restaurant.costForTwo,
+                    sla: restaurant.sla
+                }
+            }));
+
+            setListOfRestaurants(formattedData);
+            setfilteredRes(formattedData);
+        } else {
+            // Fallback to Mock Data if DB fails or returns error object
+            console.warn("DB returned non-array data, falling back to mock.");
+            setListOfRestaurants(MOCK_RESTAURANT_DATA);
+            setfilteredRes(MOCK_RESTAURANT_DATA);
+        }
+    } catch (error) {
+        console.error("Failed to fetch from database:", error);
+        // Fallback to Mock Data on network error
         setListOfRestaurants(MOCK_RESTAURANT_DATA);
         setfilteredRes(MOCK_RESTAURANT_DATA);
-
+    }
     };
 
     const onlineStatus = useOnlineStatus();

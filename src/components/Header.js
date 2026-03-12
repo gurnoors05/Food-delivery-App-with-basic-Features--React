@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux'; 
 import toast from 'react-hot-toast';
-
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
     // State to track if the user is logged in and their data
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
 
+    const { user, logout } = useContext(AuthContext);
     const cartItems = useSelector((store) => store.cart.items);
     const navigate = useNavigate();
     const [cartCount, setCartCount] = useState(0);
@@ -25,7 +27,7 @@ const Header = () => {
 
         try {
 
-            const response = await fetch(`${process.env.API_URL}/api/cart`, {
+            const response = await fetch(`${process.env.API_URL || "http://localhost:5000"}/api/cart`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -50,28 +52,28 @@ const Header = () => {
         window.removeEventListener("cartUpdated", fetchCartCount);
     };
 
-}, []);
+}, [user]);
     // Check local storage for user data when the header mounts
-    useEffect(() => {
+//     useEffect(() => {
 
-    const loadUser = () => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        } else {
-            setUser(null);
-        }
-    };
+//     const loadUser = () => {
+//         const storedUser = localStorage.getItem('user');
+//         if (storedUser) {
+//             setUser(JSON.parse(storedUser));
+//         } else {
+//             setUser(null);
+//         }
+//     };
 
-    loadUser();
+//     loadUser();
 
-    window.addEventListener("userLoggedIn", loadUser);
+//     window.addEventListener("userLoggedIn", loadUser);
 
-    return () => {
-        window.removeEventListener("userLoggedIn", loadUser);
-    };
+//     return () => {
+//         window.removeEventListener("userLoggedIn", loadUser);
+//     };
 
-}, []);
+// }, []);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -79,18 +81,13 @@ const Header = () => {
 
     const handleLogout = () => {
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+        logout(); // from AuthContext
+        setCartCount(0);
 
-    setUser(null);
-    setCartCount(0);
-    // update UI
-    window.dispatchEvent(new Event("userLoggedIn"));
+        toast.success("Logged out successfully");
 
-    toast.success("Logged out successfully");
-
-    navigate("/");
-};
+        navigate("/");
+    };
 
     return (
         <div className="flex justify-between items-center px-4 py-3 bg-white shadow-lg sticky top-0 z-50 md:px-8">

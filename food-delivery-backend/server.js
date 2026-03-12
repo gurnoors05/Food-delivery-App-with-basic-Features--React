@@ -18,19 +18,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/contact', contact); // <-- Add this
 connectDB();
-// A simple test route to check the database connection
-app.get('/api/test-db', async (req, res) => {
-    try {
-        const [rows] = await db.query('SHOW TABLES');
-        res.json({
-            message: "Database connected successfully!",
-            tables: rows
-        });
-    } catch (error) {
-        console.error("Database connection failed:", error);
-        res.status(500).json({ error: "Failed to connect to database" });
-    }
-});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

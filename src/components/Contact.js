@@ -26,7 +26,7 @@ const Contact = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.API_URL}/api/contact`, {
+      const response = await fetch(`${process.env.API_URL || "http://localhost:5000"}/api/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

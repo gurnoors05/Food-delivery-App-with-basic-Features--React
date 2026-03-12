@@ -1,61 +1,62 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 const ItemList = ({ itemCards }) => {
 
-  const [cartItems, setCartItems] = useState([]);
+        const [cartItems, setCartItems] = useState([]);
 
-  if (!Array.isArray(itemCards)) return null;
+        if (!Array.isArray(itemCards)) return null;
 
-  const token = localStorage.getItem("token");
+        // const token = localStorage.getItem("token");
+        const { user } = useContext(AuthContext);
+        const token = localStorage.getItem("token");
 
-  const fetchCart = async () => {
+        const fetchCart = async () => {
+          const token = localStorage.getItem("token");
+            if (!token) return;
 
-    if (!token) return;
+            try {
 
-    try {
+              const res = await fetch(`${process.env.API_URL || "http://localhost:5000"}/api/cart`, {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              });
 
-      const res = await fetch(`${process.env.API_URL}/api/cart`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+              const data = await res.json();
 
-      const data = await res.json();
+              setCartItems(data);
 
-      setCartItems(data);
+            } catch (err) {
+              console.error("Cart fetch error", err);
+            }
+        };
 
-    } catch (err) {
-      console.error("Cart fetch error", err);
-    }
+        useEffect(() => {
+          if (!user) {
+            setCartItems([]);
+            return;
+          }
 
-  };
+          fetchCart();
+          fetchCart();
+          window.dispatchEvent(new Event("cartUpdated"));
+        }, [user]);
 
-  useEffect(() => {
+      const getQuantity = (itemId) => {
+        // Return 0 immediately if cartItems somehow isn't an array
+        if (!Array.isArray(cartItems)) return 0;
 
-    fetchCart();
+        const item = cartItems.find(
+          i => String(i.menu_item_id) === String(itemId)
+        );
 
-    window.addEventListener("cartUpdated", fetchCart);
-
-    return () => {
-      window.removeEventListener("cartUpdated", fetchCart);
-    };
-
-  }, []);
-
-  const getQuantity = (itemId) => {
-    // Return 0 immediately if cartItems somehow isn't an array
-    if (!Array.isArray(cartItems)) return 0;
-
-    const item = cartItems.find(
-      i => String(i.menu_item_id) === String(itemId)
-    );
-
-    return item ? item.quantity : 0;
-  };
+        return item ? item.quantity : 0;
+      };
 
   const handleaddItem = async (items) => {
-
+    const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Please login first");
       return;
@@ -65,7 +66,7 @@ const ItemList = ({ itemCards }) => {
 
     const itemId = info?.id || info?.menu_item_id;
 
-    await fetch(`${process.env.API_URL}/api/cart/add`, {
+    await fetch(`${process.env.API_URL || "http://localhost:5000"}/api/cart/add`, {
 
       method: "POST",
 
@@ -85,13 +86,14 @@ const ItemList = ({ itemCards }) => {
 
     });
 
-    window.dispatchEvent(new Event("cartUpdated"));
-
+    fetchCart();
+    fetchCart();
+window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const increaseItem = async (itemId) => {
-
-    await fetch(`${process.env.API_URL}/api/cart/increase/${itemId}`, {
+    const token = localStorage.getItem("token");
+    await fetch(`${process.env.API_URL || "http://localhost:5000"}/api/cart/increase/${itemId}`, {
 
       method: "PUT",
 
@@ -101,13 +103,14 @@ const ItemList = ({ itemCards }) => {
 
     });
 
-    window.dispatchEvent(new Event("cartUpdated"));
-
+    fetchCart();
+    fetchCart();
+window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const decreaseItem = async (itemId) => {
-
-    await fetch(`${process.env.API_URL}/api/cart/decrease/${itemId}`, {
+    const token = localStorage.getItem("token");
+    await fetch(`${process.env.API_URL || "http://localhost:5000"}/api/cart/decrease/${itemId}`, {
 
       method: "PUT",
 
@@ -117,8 +120,9 @@ const ItemList = ({ itemCards }) => {
 
     });
 
-    window.dispatchEvent(new Event("cartUpdated"));
-
+    fetchCart();
+    fetchCart();
+window.dispatchEvent(new Event("cartUpdated"));
   };
 
   return (

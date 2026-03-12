@@ -12,18 +12,18 @@ import appStore from './src/components/appStore.js';
 import Cart from './src/components/Cart.js';
 import Login from './src/components/Login.js';
 import { Toaster } from 'react-hot-toast';
-
+import { AuthProvider } from './src/context/AuthContext.js';
 const AppLayout=()=>{
     return (
     <Provider store={appStore}>
-        
+        <AuthProvider>
         <div className="app">
             <Toaster position="top-right" reverseOrder={false} />
             <Header/>
             {/* <Body/> */}
             <Outlet/> {/* Outlet is component. Whenever there is change in path, outlet will be filled with children according to the path .imported from react router dom. read it in Ep 7 */}
         </div>
-    
+        </AuthProvider>
     </Provider>
     )
 };

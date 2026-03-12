@@ -1,108 +1,208 @@
-import React, { useEffect, useState } from 'react';
-import ItemList from './ItemList';
-import toast from 'react-hot-toast';
+// import React, { useEffect, useState } from 'react';
+// import ItemList from './ItemList';
+// import toast from 'react-hot-toast';
+
+// const Cart = () => {
+
+//     const [cartItems, setCartItems] = useState([]);
+//     const token = localStorage.getItem("token");
+
+//     useEffect(() => {
+
+//     const loadCart = () => {
+
+//         const token = localStorage.getItem("token");
+
+// if (!token) {
+//   return (
+//     <div className="text-center mt-20 text-xl text-gray-600">
+//       Please login to view your cart 🛒
+//     </div>
+//   );
+// }
+//         if (token) {
+//             fetchCartFromDB();
+//         } 
+
+//     };
+
+//     loadCart();
+
+//     window.addEventListener("userLoggedIn", loadCart);
+//     window.addEventListener("cartUpdated", loadCart);
+
+//     return () => {
+//         window.removeEventListener("userLoggedIn", loadCart);
+//         window.removeEventListener("cartUpdated", loadCart);
+//     };
+
+// }, []);
+//     const fetchCartFromDB = async () => {
+
+//         try {
+
+//             const response = await fetch(`${process.env.API_URL}/api/cart`, {
+//                 headers: { Authorization: `Bearer ${token}` }
+//             });
+
+//             if (!response.ok) return;
+
+//             const data = await response.json();
+
+//            const formattedData = data.map(item => ({
+//                 card: {
+//                     info: {
+//                     id: item.menu_item_id,
+//                     name: item.name,
+//                     price: item.price * 100,
+//                     category: item.category,
+//                     imageId: item.imageId,
+//                     description: item.description,
+//                     quantity: item.quantity // 👈 ADD THIS LINE
+//                     }
+//                 }
+//                 }));
+//         console.log("FORMATTED CART DATA:", formattedData);
+//             setCartItems(formattedData);
+
+//         } catch (err) {
+
+//             console.warn("Cart sync failed:", err.message);
+
+//         }
+
+//     };
+
+//     const handleClearcart = async () => {
+
+//         setCartItems([]);
+
+//         if (token) {
+
+//             try {
+
+//                 const response = await fetch(`${process.env.API_URL}/api/cart/clear`, {
+//                     method: "DELETE",
+//                     headers: { Authorization: `Bearer ${token}` }
+//                 });
+
+//                 if (response.ok) {
+//                     toast.success("Cart cleared everywhere!");
+//                 }
+
+//             } catch (err) {
+
+//                 toast.error("Could not clear database cart");
+
+//             }
+
+//         }
+
+//     };
+
+//     const totalPrice = cartItems.reduce((acc, item) => {
+//   return acc + (item.card.info.price * item.card.info.quantity);
+// }, 0);
+
+
+import React, { useEffect, useState, useContext } from "react";
+import ItemList from "./ItemList";
+import toast from "react-hot-toast";
+import { AuthContext } from "../context/AuthContext";
 
 const Cart = () => {
 
-    const [cartItems, setCartItems] = useState([]);
-    const token = localStorage.getItem("token");
+  const [cartItems, setCartItems] = useState([]);
 
-    useEffect(() => {
+  const { user } = useContext(AuthContext);
 
-    const loadCart = () => {
+  const token = localStorage.getItem("token");
 
-        const token = localStorage.getItem("token");
+  useEffect(() => {
 
-if (!token) {
-  return (
-    <div className="text-center mt-20 text-xl text-gray-600">
-      Please login to view your cart 🛒
-    </div>
-  );
-}
-        if (token) {
-            fetchCartFromDB();
-        } 
+    if (!user) {
+      setCartItems([]);
+      return;
+    }
 
-    };
+    fetchCartFromDB();
 
-    loadCart();
+  }, [user]);
 
-    window.addEventListener("userLoggedIn", loadCart);
-    window.addEventListener("cartUpdated", loadCart);
+  const fetchCartFromDB = async () => {
 
-    return () => {
-        window.removeEventListener("userLoggedIn", loadCart);
-        window.removeEventListener("cartUpdated", loadCart);
-    };
+    try {
 
-}, []);
-    const fetchCartFromDB = async () => {
+      const response = await fetch(`${process.env.API_URL || "http://localhost:5000"}/api/cart`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-        try {
+      if (!response.ok) return;
 
-            const response = await fetch(`${process.env.API_URL}/api/cart`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+      const data = await response.json();
 
-            if (!response.ok) return;
-
-            const data = await response.json();
-
-           const formattedData = data.map(item => ({
-                card: {
-                    info: {
-                    id: item.menu_item_id,
-                    name: item.name,
-                    price: item.price * 100,
-                    category: item.category,
-                    imageId: item.imageId,
-                    description: item.description,
-                    quantity: item.quantity // 👈 ADD THIS LINE
-                    }
-                }
-                }));
-        console.log("FORMATTED CART DATA:", formattedData);
-            setCartItems(formattedData);
-
-        } catch (err) {
-
-            console.warn("Cart sync failed:", err.message);
-
+      const formattedData = data.map(item => ({
+        card: {
+          info: {
+            id: item.menu_item_id,
+            name: item.name,
+            price: item.price * 100,
+            category: item.category,
+            imageId: item.imageId,
+            description: item.description,
+            quantity: item.quantity
+          }
         }
+      }));
 
-    };
+      setCartItems(formattedData);
 
-    const handleClearcart = async () => {
+    } catch (err) {
 
-        setCartItems([]);
+      console.warn("Cart sync failed:", err.message);
 
-        if (token) {
+    }
 
-            try {
+  };
 
-                const response = await fetch(`${process.env.API_URL}/api/cart/clear`, {
-                    method: "DELETE",
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+  const handleClearcart = async () => {
 
-                if (response.ok) {
-                    toast.success("Cart cleared everywhere!");
-                }
+    setCartItems([]);
 
-            } catch (err) {
+    if (!token) return;
 
-                toast.error("Could not clear database cart");
+    try {
 
-            }
+      const response = await fetch(`${process.env.API_URL || "http://localhost:5000"}/api/cart/clear`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-        }
+      if (response.ok) {
+        window.dispatchEvent(new Event("cartUpdated"));
+        toast.success("Cart cleared everywhere!");
+      }
 
-    };
+    } catch (err) {
 
-    const totalPrice = cartItems.reduce((acc, item) => {
-  return acc + (item.card.info.price * item.card.info.quantity);
-}, 0);
+      toast.error("Could not clear database cart");
+
+    }
+
+  };
+
+  const totalPrice = cartItems.reduce((acc, item) => {
+    return acc + item.card.info.price * item.card.info.quantity;
+  }, 0);
+
+  // If user not logged in
+  if (!user) {
+    return (
+      <div className="text-center mt-20 text-xl text-gray-600">
+        Please login to view your cart 🛒
+      </div>
+    );
+  }
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             <div className="max-w-3xl w-full mx-auto text-center mb-8">

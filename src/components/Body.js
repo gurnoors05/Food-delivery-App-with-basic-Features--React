@@ -28,10 +28,9 @@ const Body = () => {
 
 
         try {
-        const response = await fetch(`${process.env.API_URL}/api/restaurants`);
+        const response = await fetch(`${process.env.API_URL ||  "http://localhost:5000"}/api/restaurants`);
         const dbData = await response.json();
 
-        // Check if dbData is actually an array before mapping
         if (Array.isArray(dbData)) {
             const formattedData = dbData.map((restaurant) => ({
                 info: {

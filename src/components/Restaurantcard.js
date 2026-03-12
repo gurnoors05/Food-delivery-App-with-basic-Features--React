@@ -1,8 +1,7 @@
 
 
 const Restaurantcard=(props)=>{ 
-    const {resData}=props; // it will also be object
-    console.log(resData.info.cloudinaryImageId);
+    const {resData}=props; // it will also be object0
     const { cloudinaryImageId, name, cuisines, avgRating, costForTwo, sla } = resData?.info;
     return (
   <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex-shrink-0 hover:shadow-xl transition-all duration-300 

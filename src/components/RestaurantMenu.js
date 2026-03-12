@@ -21,49 +21,46 @@ const dataMap = {
   435405: data435405,
   457522: data457522,
   822315: data822315
-  // add all mappings
 };
 
 const RestaurantMenu = ()=>{
     
     // const menuInfo=usemenuInfo(resId);
 
-   const { resId } = useParams();
-  const [menuInfo, setmenuInfo] = useState(null);
-  const [showIndex, setshowIndex] = useState(null);
+    const { resId } = useParams();
+    const [menuInfo, setmenuInfo] = useState(null);
+    const [showIndex, setshowIndex] = useState(null);
 
-  useEffect(() => {
-    const data = dataMap[+resId];
-    if (data) {
-      setmenuInfo(data);
-      console.log("resId:", resId);
-console.log("Loaded menuInfo:", dataMap[resId] || dataMap[+resId]);
+    useEffect(() => {
+      const data = dataMap[+resId];
+      if (data) {
+        setmenuInfo(data);
 
-    } else {
-      console.error(`No data found for resId ${resId}`);
-    }
-  }, [resId]);
+      } else {
+        console.error(`No data found for resId ${resId}`);
+      }
+    }, [resId]);
 
   // Safely extract restaurantInfo and menu
- const restaurantInfo = menuInfo?.data?.cards?.[2]?.card?.card?.info;
-const menu = menuInfo?.data?.cards?.[5]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.[1]?.card?.card;
+    const restaurantInfo = menuInfo?.data?.cards?.[2]?.card?.card?.info;
+    const menu = menuInfo?.data?.cards?.[5]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.[1]?.card?.card;
 
 
 
 
 
-  if (!menuInfo?.data || !restaurantInfo || !menu) return <h1>Loading...</h1>;
+    if (!menuInfo?.data || !restaurantInfo || !menu) return <h1>Loading...</h1>;
 
 
-  const categories = menuInfo?.data?.cards?.[5]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter(
-  (c) => {
-    const type = c.card?.card?.["@type"];
-    return (
-      type === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory" ||
-      type === "type.googleapis.com/swiggy.presentation.food.v2.NestedItemCategory"
-    );
-  }
-);
+            const categories = menuInfo?.data?.cards?.[5]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter(
+            (c) => {
+              const type = c.card?.card?.["@type"];
+              return (
+                type === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory" ||
+                type === "type.googleapis.com/swiggy.presentation.food.v2.NestedItemCategory"
+              );
+            }
+          );
             return (
                 <div className="text-center">
                     <div className="text-center mb-6">

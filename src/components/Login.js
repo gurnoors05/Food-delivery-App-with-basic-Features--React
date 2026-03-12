@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast'; // Import the toast function
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import icons
-
+import { AuthContext } from '../context/AuthContext.js'; // Import AuthContext
+import { useContext } from "react";
 const LoginForm = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
   
@@ -11,6 +12,7 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
+  const {user,login,logout}=useContext(AuthContext);
   // UI State
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // To disable button during fetch
@@ -25,7 +27,7 @@ const LoginForm = () => {
     const payload = isLoginForm ? { email, password } : { name, email, password };
 
     try {
-      const response = await fetch(`${process.env.API_URL}${endpoint}`, {
+      const response = await fetch(`${process.env.API_URL || "http://localhost:5000"}${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,11 +48,11 @@ const LoginForm = () => {
       // 2. Handle Success
       if (isLoginForm) {
         // --- SUCCESSFUL LOGIN ---
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        // localStorage.setItem("token", data.token);
+        // localStorage.setItem("user", JSON.stringify(data.user));
 
-        window.dispatchEvent(new Event("userLoggedIn"));
-
+        // window.dispatchEvent(new Event("userLoggedIn"));
+        login(data.user, data.token);
         toast.success(`Welcome back, ${data.user.name.split(' ')[0]}!`);
         navigate("/");
       } else {
